@@ -9,8 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TransferRouteImport } from './routes/transfer'
+import { Route as PiRouteImport } from './routes/pi'
+import { Route as InternationalRouteImport } from './routes/international'
+import { Route as DepositRouteImport } from './routes/deposit'
+import { Route as BillsRouteImport } from './routes/bills'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TransferRoute = TransferRouteImport.update({
+  id: '/transfer',
+  path: '/transfer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PiRoute = PiRouteImport.update({
+  id: '/pi',
+  path: '/pi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InternationalRoute = InternationalRouteImport.update({
+  id: '/international',
+  path: '/international',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DepositRoute = DepositRouteImport.update({
+  id: '/deposit',
+  path: '/deposit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillsRoute = BillsRouteImport.update({
+  id: '/bills',
+  path: '/bills',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +49,96 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bills': typeof BillsRoute
+  '/deposit': typeof DepositRoute
+  '/international': typeof InternationalRoute
+  '/pi': typeof PiRoute
+  '/transfer': typeof TransferRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bills': typeof BillsRoute
+  '/deposit': typeof DepositRoute
+  '/international': typeof InternationalRoute
+  '/pi': typeof PiRoute
+  '/transfer': typeof TransferRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bills': typeof BillsRoute
+  '/deposit': typeof DepositRoute
+  '/international': typeof InternationalRoute
+  '/pi': typeof PiRoute
+  '/transfer': typeof TransferRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bills'
+    | '/deposit'
+    | '/international'
+    | '/pi'
+    | '/transfer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/bills' | '/deposit' | '/international' | '/pi' | '/transfer'
+  id:
+    | '__root__'
+    | '/'
+    | '/bills'
+    | '/deposit'
+    | '/international'
+    | '/pi'
+    | '/transfer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BillsRoute: typeof BillsRoute
+  DepositRoute: typeof DepositRoute
+  InternationalRoute: typeof InternationalRoute
+  PiRoute: typeof PiRoute
+  TransferRoute: typeof TransferRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/transfer': {
+      id: '/transfer'
+      path: '/transfer'
+      fullPath: '/transfer'
+      preLoaderRoute: typeof TransferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pi': {
+      id: '/pi'
+      path: '/pi'
+      fullPath: '/pi'
+      preLoaderRoute: typeof PiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/international': {
+      id: '/international'
+      path: '/international'
+      fullPath: '/international'
+      preLoaderRoute: typeof InternationalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/deposit': {
+      id: '/deposit'
+      path: '/deposit'
+      fullPath: '/deposit'
+      preLoaderRoute: typeof DepositRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bills': {
+      id: '/bills'
+      path: '/bills'
+      fullPath: '/bills'
+      preLoaderRoute: typeof BillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +151,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BillsRoute: BillsRoute,
+  DepositRoute: DepositRoute,
+  InternationalRoute: InternationalRoute,
+  PiRoute: PiRoute,
+  TransferRoute: TransferRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
