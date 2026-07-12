@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       { title: "Meridian Bank — Global banking, Pi-enabled" },
       { name: "description", content: "Pay bills, transfer, deposit, and send money internationally under each country's central bank rules — with built-in Pi Network wallet." },
       { property: "og:title", content: "Meridian Bank — Global banking, Pi-enabled" },
-      { property: "og:description", content: "Multi-country banking dashboard with utility & mobile bill pay, transfers, deposits, international wires, and the Pi ecosystem." },
+      { property: "og:description", content: "Pay bills, transfer, deposit, and send money internationally under each country's central bank rules — with built-in Pi Network wallet." },
     ],
   }),
   component: Dashboard,
