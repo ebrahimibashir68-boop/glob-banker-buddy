@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Sparkles, ArrowUpDown, QrCode, Store, TrendingUp, Wallet, Globe2 } from "lucide-react";
 import { toast } from "sonner";
+import { PiPremiumCheckout } from "@/components/PiPremiumCheckout";
+
 
 export const Route = createFileRoute("/pi")({
   head: () => ({
@@ -84,12 +86,17 @@ function PiPage() {
         </Card>
       </div>
 
+      <div className="mt-6">
+        <PiPremiumCheckout />
+      </div>
+
       <Tabs defaultValue="swap" className="mt-8">
         <TabsList>
           <TabsTrigger value="swap">Swap</TabsTrigger>
           <TabsTrigger value="merchants">Pi Merchants</TabsTrigger>
           <TabsTrigger value="remit">Pi Remittance</TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="swap" className="mt-6">
           <Card className="mx-auto max-w-lg p-6">

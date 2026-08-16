@@ -15,6 +15,8 @@ import { Route as InternationalRouteImport } from './routes/international'
 import { Route as DepositRouteImport } from './routes/deposit'
 import { Route as BillsRouteImport } from './routes/bills'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
+import { Route as ApiPublicPiApproveRouteImport } from './routes/api/public/pi/approve'
 
 const TransferRoute = TransferRouteImport.update({
   id: '/transfer',
@@ -46,6 +48,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPiCompleteRoute = ApiPublicPiCompleteRouteImport.update({
+  id: '/api/public/pi/complete',
+  path: '/api/public/pi/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiApproveRoute = ApiPublicPiApproveRouteImport.update({
+  id: '/api/public/pi/approve',
+  path: '/api/public/pi/approve',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +66,8 @@ export interface FileRoutesByFullPath {
   '/international': typeof InternationalRoute
   '/pi': typeof PiRoute
   '/transfer': typeof TransferRoute
+  '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
+  '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +76,8 @@ export interface FileRoutesByTo {
   '/international': typeof InternationalRoute
   '/pi': typeof PiRoute
   '/transfer': typeof TransferRoute
+  '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
+  '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +87,8 @@ export interface FileRoutesById {
   '/international': typeof InternationalRoute
   '/pi': typeof PiRoute
   '/transfer': typeof TransferRoute
+  '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
+  '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,8 +99,18 @@ export interface FileRouteTypes {
     | '/international'
     | '/pi'
     | '/transfer'
+    | '/api/public/pi/approve'
+    | '/api/public/pi/complete'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bills' | '/deposit' | '/international' | '/pi' | '/transfer'
+  to:
+    | '/'
+    | '/bills'
+    | '/deposit'
+    | '/international'
+    | '/pi'
+    | '/transfer'
+    | '/api/public/pi/approve'
+    | '/api/public/pi/complete'
   id:
     | '__root__'
     | '/'
@@ -91,6 +119,8 @@ export interface FileRouteTypes {
     | '/international'
     | '/pi'
     | '/transfer'
+    | '/api/public/pi/approve'
+    | '/api/public/pi/complete'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -100,6 +130,8 @@ export interface RootRouteChildren {
   InternationalRoute: typeof InternationalRoute
   PiRoute: typeof PiRoute
   TransferRoute: typeof TransferRoute
+  ApiPublicPiApproveRoute: typeof ApiPublicPiApproveRoute
+  ApiPublicPiCompleteRoute: typeof ApiPublicPiCompleteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -146,6 +178,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/pi/complete': {
+      id: '/api/public/pi/complete'
+      path: '/api/public/pi/complete'
+      fullPath: '/api/public/pi/complete'
+      preLoaderRoute: typeof ApiPublicPiCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/approve': {
+      id: '/api/public/pi/approve'
+      path: '/api/public/pi/approve'
+      fullPath: '/api/public/pi/approve'
+      preLoaderRoute: typeof ApiPublicPiApproveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -156,6 +202,8 @@ const rootRouteChildren: RootRouteChildren = {
   InternationalRoute: InternationalRoute,
   PiRoute: PiRoute,
   TransferRoute: TransferRoute,
+  ApiPublicPiApproveRoute: ApiPublicPiApproveRoute,
+  ApiPublicPiCompleteRoute: ApiPublicPiCompleteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
