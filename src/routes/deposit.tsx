@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Camera, Banknote, MapPin, QrCode } from "lucide-react";
 import { toast } from "sonner";
+import { PiPayButton } from "@/components/PiPayButton";
+import { Card as UICard } from "@/components/ui/card";
 
 export const Route = createFileRoute("/deposit")({
   head: () => ({
@@ -22,6 +24,10 @@ export const Route = createFileRoute("/deposit")({
 
 function DepositPage() {
   const { country } = useCountry();
+  const [depositAmount, setDepositAmount] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const depNum = parseFloat(depositAmount) || 0;
+  const wdNum = parseFloat(withdrawAmount) || 0;
 
   return (
     <AppShell>
@@ -46,6 +52,27 @@ function DepositPage() {
             cta="Generate QR" />
           <MethodCard icon={<Banknote className="h-5 w-5" />} title="Branch / Agent" desc={`Visit any partner branch across ${country.country}.`}
             cta="Find a branch" />
+
+          <UICard className="p-6 md:col-span-3">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-pi">Deposit from Pi wallet</div>
+            <h3 className="mt-1 font-serif text-lg font-bold text-navy">Top up your {country.currency} balance with π</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Funds move from your connected Pi wallet to Meridian on Pi Mainnet, then credit your account.
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+              <div className="flex-1 space-y-1.5">
+                <Label className="text-xs">Amount ({country.currency})</Label>
+                <Input type="number" placeholder="0.00" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
+              </div>
+              <PiPayButton
+                amount={depNum}
+                country={country}
+                disabled={!depNum}
+                memo={`Deposit to Meridian ${country.currency} account`}
+                metadata={{ type: "deposit", country: country.code, localAmount: depNum }}
+              />
+            </div>
+          </UICard>
         </TabsContent>
 
         <TabsContent value="withdraw" className="mt-6 grid gap-6 lg:grid-cols-3">
@@ -54,7 +81,7 @@ function DepositPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label className="text-xs">Amount ({country.currency})</Label>
-                <Input type="number" placeholder="0.00" />
+                <Input type="number" placeholder="0.00" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Method</Label>
@@ -74,6 +101,21 @@ function DepositPage() {
               onClick={() => toast.success("Cardless code generated", { description: "Valid at any Meridian ATM for 30 minutes." })}>
               Generate cash code
             </Button>
+            <div className="rounded-lg border border-pi/30 bg-pi/5 p-4">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-pi">Withdraw to Pi wallet</div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Meridian sends π straight to your connected Pi wallet (app-to-user payment).
+              </p>
+              <PiPayButton
+                className="mt-3"
+                direction="payout"
+                amount={wdNum}
+                country={country}
+                disabled={!wdNum}
+                memo={`Withdrawal from Meridian ${country.currency} account`}
+                metadata={{ type: "withdrawal", country: country.code, localAmount: wdNum }}
+              />
+            </div>
           </Card>
           <Card className="p-6">
             <h3 className="font-serif text-lg font-bold text-navy">Today's limits</h3>
