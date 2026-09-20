@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { useCountry } from "@/lib/country-context";
 import { formatMoney } from "@/lib/banking";
@@ -10,7 +11,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Camera, Banknote, MapPin, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import { PiPayButton } from "@/components/PiPayButton";
-import { Card as UICard } from "@/components/ui/card";
 
 export const Route = createFileRoute("/deposit")({
   head: () => ({
@@ -53,7 +53,7 @@ function DepositPage() {
           <MethodCard icon={<Banknote className="h-5 w-5" />} title="Branch / Agent" desc={`Visit any partner branch across ${country.country}.`}
             cta="Find a branch" />
 
-          <UICard className="p-6 md:col-span-3">
+          <Card className="p-6 md:col-span-3">
             <div className="text-[11px] font-semibold uppercase tracking-wider text-pi">Deposit from Pi wallet</div>
             <h3 className="mt-1 font-serif text-lg font-bold text-navy">Top up your {country.currency} balance with π</h3>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -72,7 +72,7 @@ function DepositPage() {
                 metadata={{ type: "deposit", country: country.code, localAmount: depNum }}
               />
             </div>
-          </UICard>
+          </Card>
         </TabsContent>
 
         <TabsContent value="withdraw" className="mt-6 grid gap-6 lg:grid-cols-3">
