@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { usePiWallet } from "@/lib/pi-wallet";
-import { PI_USD, type CountryProfile } from "@/lib/banking";
+import { PI_USD, type CentralBank } from "@/lib/banking";
 
 /** Convert a local-currency amount into π using the indicative FX table. */
-export function localToPi(amount: number, country: CountryProfile) {
+export function localToPi(amount: number, country: CentralBank) {
   const usd = amount * country.fxToUsd;
   return usd / PI_USD;
 }
@@ -14,7 +14,7 @@ export function localToPi(amount: number, country: CountryProfile) {
 interface Props {
   /** Amount in local currency; converted to π automatically. */
   amount: number;
-  country: CountryProfile;
+  country: CentralBank;
   memo: string;
   metadata?: Record<string, unknown>;
   /** "pay" = user pays the app (U2A) · "payout" = app pays the user (A2U) */

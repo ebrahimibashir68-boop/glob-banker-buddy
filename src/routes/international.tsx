@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Globe2, AlertTriangle, ShieldCheck, ArrowRight, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
+import { PiPayButton } from "@/components/PiPayButton";
 
 export const Route = createFileRoute("/international")({
   head: () => ({
@@ -117,6 +118,19 @@ function IntlPage() {
             onClick={() => toast.success("Wire submitted for compliance review", { description: `${rail} · ETA 1 business day` })}>
             Review & send <ArrowRight className="ml-1 h-4 w-4" />
           </Button>
+
+          <PiPayButton
+            className="w-full"
+            amount={total}
+            country={country}
+            disabled={blocked || !num}
+            memo={`Cross-border remittance to ${destCountry.country}`}
+            metadata={{ type: "remittance", from: country.code, to: dest, localTotal: total }}
+          />
+          <p className="text-[11px] leading-relaxed text-muted-foreground">
+            Pi remittance settles peer-to-peer on Pi Mainnet, bypassing correspondent banks — central
+            bank caps on fiat corridors do not apply, purpose reporting still does.
+          </p>
           {overCap && !blocked && (
             <p className="text-xs text-destructive">
               Exceeds {country.centralBank} international daily cap ({formatMoney(country.intlDailyCap, country)}).
