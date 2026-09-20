@@ -5,6 +5,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { PiConnectButton } from "@/components/PiConnectButton";
 import {
   LayoutDashboard, Receipt, ArrowLeftRight, Landmark, Globe2, Sparkles, ChevronDown, ShieldCheck,
 } from "lucide-react";
@@ -51,6 +52,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             })}
           </nav>
 
+          <div className="flex items-center gap-2">
+          <PiConnectButton className="hidden sm:inline-flex" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="h-9 gap-2">
@@ -77,10 +80,12 @@ export function AppShell({ children }: { children: ReactNode }) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </div>
 
         <div className="lg:hidden">
-          <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-3 pb-2 pt-1">
+          <div className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-3 pb-2 pt-1">
+            <PiConnectButton className="shrink-0 sm:hidden" />
             {NAV.map((n) => {
               const active = n.to === "/" ? path === "/" : path.startsWith(n.to);
               const Icon = n.icon;
