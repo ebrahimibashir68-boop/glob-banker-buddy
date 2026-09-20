@@ -15,6 +15,7 @@ import { Route as InternationalRouteImport } from './routes/international'
 import { Route as DepositRouteImport } from './routes/deposit'
 import { Route as BillsRouteImport } from './routes/bills'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicPiPayoutRouteImport } from './routes/api/public/pi/payout'
 import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
 import { Route as ApiPublicPiApproveRouteImport } from './routes/api/public/pi/approve'
 
@@ -48,6 +49,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPiPayoutRoute = ApiPublicPiPayoutRouteImport.update({
+  id: '/api/public/pi/payout',
+  path: '/api/public/pi/payout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPiCompleteRoute = ApiPublicPiCompleteRouteImport.update({
   id: '/api/public/pi/complete',
   path: '/api/public/pi/complete',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/transfer': typeof TransferRoute
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
+  '/api/public/pi/payout': typeof ApiPublicPiPayoutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/transfer': typeof TransferRoute
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
+  '/api/public/pi/payout': typeof ApiPublicPiPayoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/transfer': typeof TransferRoute
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
+  '/api/public/pi/payout': typeof ApiPublicPiPayoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/transfer'
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
+    | '/api/public/pi/payout'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/transfer'
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
+    | '/api/public/pi/payout'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/transfer'
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
+    | '/api/public/pi/payout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   TransferRoute: typeof TransferRoute
   ApiPublicPiApproveRoute: typeof ApiPublicPiApproveRoute
   ApiPublicPiCompleteRoute: typeof ApiPublicPiCompleteRoute
+  ApiPublicPiPayoutRoute: typeof ApiPublicPiPayoutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/pi/payout': {
+      id: '/api/public/pi/payout'
+      path: '/api/public/pi/payout'
+      fullPath: '/api/public/pi/payout'
+      preLoaderRoute: typeof ApiPublicPiPayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/pi/complete': {
       id: '/api/public/pi/complete'
       path: '/api/public/pi/complete'
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   TransferRoute: TransferRoute,
   ApiPublicPiApproveRoute: ApiPublicPiApproveRoute,
   ApiPublicPiCompleteRoute: ApiPublicPiCompleteRoute,
+  ApiPublicPiPayoutRoute: ApiPublicPiPayoutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
