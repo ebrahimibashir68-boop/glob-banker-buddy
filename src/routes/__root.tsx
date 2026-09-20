@@ -128,10 +128,13 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <CountryProvider>
-        <Outlet />
-        <Toaster position="top-right" />
+        <PiWalletProvider>
+          <Outlet />
+          <Toaster position="top-right" />
+        </PiWalletProvider>
       </CountryProvider>
     </QueryClientProvider>
+
   );
 }
 
