@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CountryProvider } from "../lib/country-context";
+import { PiWalletProvider } from "../lib/pi-wallet";
+
 import { Toaster } from "../components/ui/sonner";
 
 
