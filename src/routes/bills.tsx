@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Zap, Flame, Droplets, Wifi, Phone, Tv, Receipt, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { PiPayButton } from "@/components/PiPayButton";
 
 export const Route = createFileRoute("/bills")({
   head: () => ({
@@ -34,6 +35,10 @@ const CATEGORIES = [
 function BillsPage() {
   const { country } = useCountry();
   const [tab, setTab] = useState("utilities");
+  const [quickAmount, setQuickAmount] = useState("");
+  const [quickBiller, setQuickBiller] = useState(country.billers[0] ?? "");
+  const [topupOperator, setTopupOperator] = useState(country.mobileOperators[0] ?? "");
+  const [topupAmount, setTopupAmount] = useState("");
 
   return (
     <AppShell>
@@ -89,7 +94,7 @@ function BillsPage() {
               <p className="mt-1 text-xs text-muted-foreground">Enter a biller reference to pay in one tap.</p>
               <div className="mt-4 space-y-3">
                 <FormField label="Biller">
-                  <Select defaultValue={country.billers[0]}>
+                  <Select value={quickBiller} onValueChange={setQuickBiller}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>{country.billers.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}</SelectContent>
                   </Select>
@@ -98,7 +103,7 @@ function BillsPage() {
                   <Input placeholder="e.g. 1002340" />
                 </FormField>
                 <FormField label={`Amount (${country.currency})`}>
-                  <Input type="number" placeholder="0.00" />
+                  <Input type="number" placeholder="0.00" value={quickAmount} onChange={(e) => setQuickAmount(e.target.value)} />
                 </FormField>
                 <FormField label="Pay from">
                   <Select defaultValue="chk">
@@ -114,6 +119,14 @@ function BillsPage() {
                   onClick={() => toast.success("Bill paid", { description: `Confirmation sent · cleared via ${country.centralBank}` })}>
                   Pay now
                 </Button>
+                <PiPayButton
+                  className="w-full"
+                  amount={parseFloat(quickAmount) || 0}
+                  country={country}
+                  disabled={!(parseFloat(quickAmount) > 0)}
+                  memo={`Bill payment · ${quickBiller}`}
+                  metadata={{ type: "bill", biller: quickBiller, country: country.code }}
+                />
                 <p className="text-[11px] leading-relaxed text-muted-foreground">
                   Cleared through the local ACH network under {country.centralBank} rules. No fee for domestic billers.
                 </p>
@@ -154,7 +167,7 @@ function BillsPage() {
               <h3 className="font-serif text-lg font-bold text-navy">Recharge any number</h3>
               <div className="mt-4 space-y-3">
                 <FormField label="Operator">
-                  <Select defaultValue={country.mobileOperators[0]}>
+                  <Select value={topupOperator} onValueChange={setTopupOperator}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>{country.mobileOperators.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                   </Select>
@@ -163,12 +176,20 @@ function BillsPage() {
                   <Input placeholder="+_ ___ ___ ____" />
                 </FormField>
                 <FormField label={`Amount (${country.currency})`}>
-                  <Input type="number" placeholder="0.00" />
+                  <Input type="number" placeholder="0.00" value={topupAmount} onChange={(e) => setTopupAmount(e.target.value)} />
                 </FormField>
                 <Button className="w-full bg-navy text-navy-foreground hover:bg-navy/90"
                   onClick={() => toast.success("Top-up successful")}>
                   Recharge
                 </Button>
+                <PiPayButton
+                  className="w-full"
+                  amount={parseFloat(topupAmount) || 0}
+                  country={country}
+                  disabled={!(parseFloat(topupAmount) > 0)}
+                  memo={`Mobile top-up · ${topupOperator}`}
+                  metadata={{ type: "mobile_topup", operator: topupOperator, country: country.code }}
+                />
               </div>
             </Card>
           </div>
@@ -198,10 +219,20 @@ function BillsPage() {
 function PayButton({ biller, amount }: { biller: string; amount: number }) {
   const { country } = useCountry();
   return (
+    <div className="flex items-center gap-1.5">
+    <PiPayButton
+      size="sm"
+      amount={amount}
+      country={country}
+      memo={`Bill payment · ${biller}`}
+      metadata={{ type: "bill", biller, country: country.code }}
+      label="π"
+    />
     <Button size="sm" className="bg-navy text-navy-foreground hover:bg-navy/90"
       onClick={() => toast.success(`Paid ${biller}`, { description: `${formatMoney(amount, country)} · settled` })}>
       Pay
     </Button>
+    </div>
   );
 }
 

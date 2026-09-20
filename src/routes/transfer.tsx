@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowRight, Zap, Clock, Users } from "lucide-react";
 import { toast } from "sonner";
+import { PiPayButton } from "@/components/PiPayButton";
 
 export const Route = createFileRoute("/transfer")({
   head: () => ({
@@ -99,6 +100,19 @@ function TransferPage() {
               onClick={() => toast.success("Transfer initiated", { description: `${formatMoney(num, country)} · instant clearing` })}>
               Review & send <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
+
+            <PiPayButton
+              className="w-full"
+              amount={num}
+              country={country}
+              disabled={!num || overCap}
+              memo="Meridian transfer funded with Pi"
+              metadata={{ type: "transfer", country: country.code, localAmount: num }}
+            />
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
+              Paying with Pi debits your connected Pi wallet on Pi Mainnet; the recipient is credited
+              in {country.currency} at the indicative rate.
+            </p>
           </div>
         </Card>
 
