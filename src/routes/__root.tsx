@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CountryProvider } from "../lib/country-context";
+import { SimulationProvider } from "../lib/simulation-context";
 import { PiWalletProvider } from "../lib/pi-wallet";
 
 import { Toaster } from "../components/ui/sonner";
@@ -91,8 +92,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Meridian Bank — Global banking, Pi-enabled" },
       { name: "twitter:description", content: "Pay bills, transfer, deposit, and send money internationally under each country's central bank rules — with built-in Pi Network wallet." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/77dc76bc-700c-4f5f-9515-43e9bda4ceee/id-preview-d02ab16b--b56cb967-15cd-4ee2-8a18-9a2df0b8b70e.lovable.app-1783896058694.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/77dc76bc-700c-4f5f-9515-43e9bda4ceee/id-preview-d02ab16b--b56cb967-15cd-4ee2-8a18-9a2df0b8b70e.lovable.app-1783896058694.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -131,7 +130,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <CountryProvider>
         <PiWalletProvider>
-          <Outlet />
+          <SimulationProvider><Outlet /></SimulationProvider>
           <Toaster position="top-right" />
         </PiWalletProvider>
       </CountryProvider>
