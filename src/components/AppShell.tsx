@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PiConnectButton } from "@/components/PiConnectButton";
 import {
-  LayoutDashboard, Receipt, ArrowLeftRight, Landmark, Globe2, Sparkles, ChevronDown, ShieldCheck,
+  LayoutDashboard, Receipt, ArrowLeftRight, Landmark, Globe2, Sparkles, ChevronDown, ShieldCheck, Wallet,
 } from "lucide-react";
 
 const NAV = [
@@ -16,6 +16,7 @@ const NAV = [
   { to: "/transfer",      label: "Transfer",       icon: ArrowLeftRight },
   { to: "/deposit",       label: "Deposit / Withdraw", icon: Landmark },
   { to: "/international", label: "International",  icon: Globe2 },
+  { to: "/vaults", label: "Banking core", icon: Wallet },
   { to: "/pi",            label: "Pi Ecosystem",   icon: Sparkles },
 ] as const;
 
@@ -37,12 +38,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center gap-0 xl:flex">
             {NAV.map((n) => {
               const active = n.to === "/" ? path === "/" : path.startsWith(n.to);
               return (
                 <Link key={n.to} to={n.to}
-                  className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                     active ? "bg-accent text-navy" : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
                   }`}
                 >
@@ -83,7 +84,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <div className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-3 pb-2 pt-1">
             <PiConnectButton className="shrink-0 sm:hidden" />
             {NAV.map((n) => {
@@ -103,6 +104,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
+      <div className="border-b border-warning/30 bg-warning/10 px-4 py-2 text-center text-xs text-foreground">Banking simulation · No licensed banking or real custody · Demo data resets on refresh. Existing Pi checkout is separate.</div>
       <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-10">{children}</main>
 
       <footer className="mt-16 border-t border-border/60 bg-navy text-navy-foreground/80">
@@ -111,7 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="font-serif text-lg font-bold text-navy-foreground">Meridian Bank</div>
             <p className="mt-2 text-xs leading-relaxed">
               A demonstration of jurisdiction-aware banking UX with Pi Network integration.
-              Not a real financial institution. No real money movement.
+              Not a real financial institution. Banking balances and settlement are simulated; existing Pi checkout is separate.
             </p>
           </div>
           <div className="text-xs">

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { useSimulation } from "@/lib/simulation-context";
 import { useCountry } from "@/lib/country-context";
 import { formatMoney } from "@/lib/banking";
 import { Card } from "@/components/ui/card";
@@ -15,6 +16,10 @@ import { PiPayButton } from "@/components/PiPayButton";
 export const Route = createFileRoute("/deposit")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Deposit & Withdraw · Meridian Banking Simulation" },
+      { property: "og:description", content: "Explore simulated deposit & withdraw alongside a separate Pi SDK checkout." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Deposit & Withdraw · Meridian Bank" },
       { name: "description", content: "Mobile check deposit, ATM withdrawal, branch cash-in and cash-out." },
     ],
@@ -24,6 +29,8 @@ export const Route = createFileRoute("/deposit")({
 
 function DepositPage() {
   const { country } = useCountry();
+  const sim = useSimulation();
+  const settle = (amount: number, memo: string, category: string, source = "chk", deposit = false) => { try { sim.transact(amount, memo, category, source, deposit); toast.success("Simulation settlement recorded"); } catch (error) { toast.error(error instanceof Error ? error.message : "Settlement failed"); } };
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const depNum = parseFloat(depositAmount) || 0;
@@ -34,7 +41,7 @@ function DepositPage() {
       <div>
         <h1 className="font-serif text-3xl font-bold text-navy md:text-4xl">Deposit & Withdraw</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Cash-in and cash-out under {country.centralBank} operational rules.
+          Simulated cash-in and cash-out · profile: {country.centralBank} operational rules.
         </p>
       </div>
 
@@ -57,13 +64,14 @@ function DepositPage() {
             <div className="text-[11px] font-semibold uppercase tracking-wider text-pi">Deposit from Pi wallet</div>
             <h3 className="mt-1 font-serif text-lg font-bold text-navy">Top up your {country.currency} balance with π</h3>
             <p className="mt-1 text-xs text-muted-foreground">
-              Funds move from your connected Pi wallet to Meridian on Pi Mainnet, then credit your account.
+              Simulated deposits credit only the demo ledger. Pi SDK checkout below is separate and does not convert funds.
             </p>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
               <div className="flex-1 space-y-1.5">
                 <Label className="text-xs">Amount ({country.currency})</Label>
                 <Input type="number" placeholder="0.00" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
               </div>
+              <Button disabled={depNum <= 0} onClick={() => settle(depNum, "Demo cash deposit", "Deposit", "chk", true)}>Simulate deposit</Button>
               <PiPayButton
                 amount={depNum}
                 country={country}
@@ -98,8 +106,8 @@ function DepositPage() {
               Transactions above {formatMoney(country.dailyTransferCap, country)} may require additional verification.
             </div>
             <Button className="bg-navy text-navy-foreground hover:bg-navy/90"
-              onClick={() => toast.success("Cardless code generated", { description: "Valid at any Meridian ATM for 30 minutes." })}>
-              Generate cash code
+              disabled={wdNum <= 0} onClick={() => settle(wdNum, "Demo cash withdrawal", "Withdrawal")}>
+              Simulate cash withdrawal
             </Button>
             <div className="rounded-lg border border-pi/30 bg-pi/5 p-4">
               <div className="text-[11px] font-semibold uppercase tracking-wider text-pi">Withdraw to Pi wallet</div>

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { useSimulation } from "@/lib/simulation-context";
 import { useCountry } from "@/lib/country-context";
 import { formatMoney } from "@/lib/banking";
 import { Card } from "@/components/ui/card";
@@ -16,6 +17,10 @@ import { PiPayButton } from "@/components/PiPayButton";
 export const Route = createFileRoute("/bills")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Bills & Mobile · Meridian Banking Simulation" },
+      { property: "og:description", content: "Explore simulated bills & mobile alongside a separate Pi SDK checkout." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Pay Bills & Mobile Top-up · Meridian Bank" },
       { name: "description", content: "Pay electricity, gas, water, internet, TV, and top-up mobile phones with local operators — under your country's central bank rules." },
     ],
@@ -34,6 +39,9 @@ const CATEGORIES = [
 
 function BillsPage() {
   const { country } = useCountry();
+  const sim = useSimulation();
+  const settle = (amount: number, memo: string, category: string, source = "chk", deposit = false) => { try { sim.transact(amount, memo, category, source, deposit); toast.success("Simulation settlement recorded"); } catch (error) { toast.error(error instanceof Error ? error.message : "Settlement failed"); } };
+  const [source, setSource] = useState("chk");
   const [tab, setTab] = useState("utilities");
   const [quickAmount, setQuickAmount] = useState("");
   const [quickBiller, setQuickBiller] = useState(country.billers[0] ?? "");
@@ -42,7 +50,7 @@ function BillsPage() {
 
   return (
     <AppShell>
-      <Header title="Utilities & Mobile" subtitle={`${country.billers.length} local billers · ${country.mobileOperators.length} mobile operators · settled through ${country.centralBank}`} />
+      <Header title="Utilities & Mobile" subtitle={`${country.billers.length} local billers · ${country.mobileOperators.length} mobile operators · simulation profile: ${country.centralBank}`} />
 
       <Tabs value={tab} onValueChange={setTab} className="mt-6">
         <TabsList>
@@ -106,17 +114,17 @@ function BillsPage() {
                   <Input type="number" placeholder="0.00" value={quickAmount} onChange={(e) => setQuickAmount(e.target.value)} />
                 </FormField>
                 <FormField label="Pay from">
-                  <Select defaultValue="chk">
+                  <Select value={source} onValueChange={setSource}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="chk">Everyday Checking · **** 4021</SelectItem>
                       <SelectItem value="sav">Savings · **** 7788</SelectItem>
-                      <SelectItem value="pi">Pi Wallet · π **** 9F2A</SelectItem>
+
                     </SelectContent>
                   </Select>
                 </FormField>
                 <Button className="w-full bg-navy text-navy-foreground hover:bg-navy/90"
-                  onClick={() => toast.success("Bill paid", { description: `Confirmation sent · cleared via ${country.centralBank}` })}>
+                  onClick={() => settle(Number(quickAmount), `Bill · ${quickBiller}`, "Bills", source)}>
                   Pay now
                 </Button>
                 <PiPayButton
@@ -154,7 +162,7 @@ function BillsPage() {
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {[10, 25, 50, 100].map(v => (
                         <button key={v} className="rounded-full border border-border px-2.5 py-1 text-xs font-medium hover:bg-accent"
-                          onClick={() => toast.success(`Top-up sent to ${op}`, { description: `${formatMoney(v, country)} · applied instantly` })}>
+                          onClick={() => settle(v, `Mobile top-up · ${op}`, "Mobile")}>
                           {formatMoney(v, country)}
                         </button>
                       ))}
@@ -179,7 +187,7 @@ function BillsPage() {
                   <Input type="number" placeholder="0.00" value={topupAmount} onChange={(e) => setTopupAmount(e.target.value)} />
                 </FormField>
                 <Button className="w-full bg-navy text-navy-foreground hover:bg-navy/90"
-                  onClick={() => toast.success("Top-up successful")}>
+                  onClick={() => settle(Number(topupAmount), `Mobile top-up · ${topupOperator}`, "Mobile")}>
                   Recharge
                 </Button>
                 <PiPayButton
@@ -217,6 +225,7 @@ function BillsPage() {
 }
 
 function PayButton({ biller, amount }: { biller: string; amount: number }) {
+  const sim = useSimulation();
   const { country } = useCountry();
   return (
     <div className="flex items-center gap-1.5">
@@ -229,7 +238,7 @@ function PayButton({ biller, amount }: { biller: string; amount: number }) {
       label="π"
     />
     <Button size="sm" className="bg-navy text-navy-foreground hover:bg-navy/90"
-      onClick={() => toast.success(`Paid ${biller}`, { description: `${formatMoney(amount, country)} · settled` })}>
+      onClick={() => { try { sim.transact(amount, `Bill · ${biller}`, "Bills"); toast.success("Simulated bill settled"); } catch(error) { toast.error(error instanceof Error ? error.message : "Settlement failed"); } }}>
       Pay
     </Button>
     </div>

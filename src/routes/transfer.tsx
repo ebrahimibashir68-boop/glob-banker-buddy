@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { useSimulation } from "@/lib/simulation-context";
 import { useCountry } from "@/lib/country-context";
 import { formatMoney, seedAccounts } from "@/lib/banking";
 import { Card } from "@/components/ui/card";
@@ -16,6 +17,10 @@ import { PiPayButton } from "@/components/PiPayButton";
 export const Route = createFileRoute("/transfer")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Domestic Transfers · Meridian Banking Simulation" },
+      { property: "og:description", content: "Explore simulated domestic transfers alongside a separate Pi SDK checkout." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Transfer Money · Meridian Bank" },
       { name: "description", content: "Send money instantly to any account under your country's central bank rules." },
     ],
@@ -25,7 +30,11 @@ export const Route = createFileRoute("/transfer")({
 
 function TransferPage() {
   const { country } = useCountry();
-  const accounts = seedAccounts(country);
+  const sim = useSimulation();
+  const settle = (amount: number, memo: string, category: string, source = "chk", deposit = false) => { try { sim.transact(amount, memo, category, source, deposit); toast.success("Simulation settlement recorded"); } catch (error) { toast.error(error instanceof Error ? error.message : "Settlement failed"); } };
+  const accounts = sim.state.vaults.filter(v => v.currency === country.currency).map(v => ({ ...v, type: v.kind }));
+  const [source, setSource] = useState("chk");
+  const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const num = parseFloat(amount) || 0;
   const overCap = num > country.dailyTransferCap;
@@ -35,7 +44,7 @@ function TransferPage() {
       <div>
         <h1 className="font-serif text-3xl font-bold text-navy md:text-4xl">Send money</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Domestic transfers cleared via {country.centralBank}. Daily cap {formatMoney(country.dailyTransferCap, country)}.
+          Simulated domestic ledger transfers · profile: {country.centralBank}. Daily cap {formatMoney(country.dailyTransferCap, country)}.
         </p>
       </div>
 
@@ -44,7 +53,7 @@ function TransferPage() {
           <div className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="From account">
-                <Select defaultValue="chk">
+                <Select value={source} onValueChange={setSource}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {accounts.map(a => (
@@ -68,7 +77,7 @@ function TransferPage() {
             </div>
 
             <Field label="Recipient name">
-              <Input placeholder="Full legal name" />
+              <Input aria-label="Recipient name" value={recipient} onChange={e => setRecipient(e.target.value)} placeholder="Full legal name" />
             </Field>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label={country.requiresIban ? "IBAN" : "Account number"}>
@@ -95,9 +104,9 @@ function TransferPage() {
               <Textarea rows={2} placeholder="e.g. Rent, invoice #123" />
             </Field>
 
-            <Button disabled={!num || overCap}
+            <Button disabled={num <= 0 || overCap || !recipient.trim()}
               className="w-full bg-navy text-navy-foreground hover:bg-navy/90"
-              onClick={() => toast.success("Transfer initiated", { description: `${formatMoney(num, country)} · instant clearing` })}>
+              onClick={() => settle(num, `Transfer to ${recipient}`, "Transfer", source)}>
               Review & send <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
 
@@ -110,8 +119,7 @@ function TransferPage() {
               metadata={{ type: "transfer", country: country.code, localAmount: num }}
             />
             <p className="text-[11px] leading-relaxed text-muted-foreground">
-              Paying with Pi debits your connected Pi wallet on Pi Mainnet; the recipient is credited
-              in {country.currency} at the indicative rate.
+              Pi SDK checkout is separate. Paying the app does not credit a bank recipient or convert fiat.
             </p>
           </div>
         </Card>

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { useSimulation } from "@/lib/simulation-context";
 import { useCountry } from "@/lib/country-context";
 import { PI_USD } from "@/lib/banking";
 import { Card } from "@/components/ui/card";
@@ -16,6 +17,10 @@ import { PiPremiumCheckout } from "@/components/PiPremiumCheckout";
 export const Route = createFileRoute("/pi")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Pi Ecosystem · Meridian Banking Simulation" },
+      { property: "og:description", content: "Explore simulated pi ecosystem alongside a separate Pi SDK checkout." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Pi Ecosystem Wallet · Meridian Bank" },
       { name: "description", content: "Hold, send, swap, and spend Pi (π) alongside your local currency — integrated with the Pi Network mainnet." },
     ],
@@ -25,6 +30,8 @@ export const Route = createFileRoute("/pi")({
 
 function PiPage() {
   const { country } = useCountry();
+  const sim = useSimulation();
+  const settle = (amount: number, memo: string, category: string, source = "chk", deposit = false) => { try { sim.transact(amount, memo, category, source, deposit); toast.success("Simulation settlement recorded"); } catch (error) { toast.error(error instanceof Error ? error.message : "Settlement failed"); } };
   const [amount, setAmount] = useState("100");
   const num = parseFloat(amount) || 0;
   const local = (num * PI_USD) / country.fxToUsd;
@@ -34,7 +41,7 @@ function PiPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-pi/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-pi">
-            <Sparkles className="h-3 w-3" /> Pi Network Mainnet
+            <Sparkles className="h-3 w-3" /> Pi SDK + simulated banking
           </div>
           <h1 className="mt-2 font-serif text-3xl font-bold text-navy md:text-4xl">Pi Ecosystem</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
@@ -46,8 +53,8 @@ function PiPage() {
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <Card className="relative overflow-hidden border-0 bg-gradient-pi p-6 text-pi-foreground shadow-card lg:col-span-2">
           <Sparkles className="absolute -right-6 -top-6 h-40 w-40 opacity-10" strokeWidth={0.8} />
-          <div className="text-xs uppercase tracking-widest opacity-80">Pi Balance</div>
-          <div className="mt-2 font-serif text-5xl font-bold">428.7314 π</div>
+          <div className="text-xs uppercase tracking-widest opacity-80">Simulated Pi Balance</div>
+          <div className="mt-2 font-serif text-5xl font-bold">{(sim.state.vaults.find(v => v.id === "pi")?.balance ?? 0).toFixed(4)} π</div>
           <div className="mt-1 text-sm opacity-80">
             ≈ ${(428.73 * PI_USD).toFixed(2)} USD · ≈ {country.currencySymbol}
             {((428.73 * PI_USD) / country.fxToUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })} {country.currency}
@@ -61,7 +68,7 @@ function PiPage() {
               { icon: <Store className="h-4 w-4" />, label: "Pay merchant" },
             ].map((a) => (
               <button key={a.label} className="flex items-center justify-center gap-2 rounded-lg bg-white/15 py-2.5 text-sm font-medium backdrop-blur transition-colors hover:bg-white/25"
-                onClick={() => toast.success(a.label, { description: "Pi Mainnet transaction pending confirmation" })}>
+                onClick={() => toast.success(a.label, { description: "Demo action only; no on-chain transaction created" })}>
                 {a.icon}{a.label}
               </button>
             ))}
@@ -81,7 +88,7 @@ function PiPage() {
             </svg>
           </div>
           <div className="mt-2 rounded-md bg-muted p-2 text-[11px] text-muted-foreground">
-            Rate is indicative. Actual swap price set at confirmation on Pi Mainnet.
+            Rate is indicative. Mock rate only; no exchange or Mainnet swap is executed.
           </div>
         </Card>
       </div>
@@ -120,11 +127,11 @@ function PiPage() {
                 </div>
               </div>
               <div className="rounded-md border border-border/60 p-3 text-xs text-muted-foreground">
-                Route: Pi Mainnet → Meridian FX desk → {country.currency} account · Settles in ~30 seconds
+                Route: simulated Pi asset → demo FX ledger → {country.currency} vault
               </div>
               <Button className="w-full bg-pi text-pi-foreground hover:bg-pi/90"
-                onClick={() => toast.success("Swap confirmed", { description: "Pi Mainnet block mined · funds settled" })}>
-                Confirm swap
+                onClick={() => { try { sim.swap(num,"sell"); toast.success("Simulated swap settled"); } catch(error) { toast.error(error instanceof Error ? error.message : "Swap failed"); } }}>
+                Confirm simulated swap
               </Button>
             </div>
           </Card>

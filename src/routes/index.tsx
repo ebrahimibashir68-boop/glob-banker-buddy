@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useCountry } from "@/lib/country-context";
-import { formatMoney, seedAccounts, seedTxns, PI_USD } from "@/lib/banking";
+import { useSimulation } from "@/lib/simulation-context";
+import { formatMoney, PI_USD } from "@/lib/banking";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -14,6 +15,8 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Meridian Bank — Global banking, Pi-enabled" },
       { name: "description", content: "Pay bills, transfer, deposit, and send money internationally under each country's central bank rules — with built-in Pi Network wallet." },
       { property: "og:title", content: "Meridian Bank — Global banking, Pi-enabled" },
@@ -25,10 +28,11 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const { country } = useCountry();
-  const accounts = seedAccounts(country);
-  const txns = seedTxns();
+  const { state } = useSimulation();
+  const accounts = state.vaults.map(v => ({ ...v, type: v.kind }));
+  const txns = state.journal.map(j => ({ id: j.id, date: new Date(j.timestamp).toLocaleDateString(), merchant: j.memo, category: j.category, amount: j.lines.filter(l => l.account === "chk").reduce((sum,l) => sum + l.delta,0) })).filter(t => t.amount !== 0);
   const total = accounts.filter(a => a.type !== "Pi Wallet").reduce((s, a) => s + a.balance, 0);
-  const piBal = accounts.find(a => a.type === "Pi Wallet")!.balance;
+  const piBal = accounts.find(a => a.type === "Pi Wallet")?.balance ?? 0;
 
   return (
     <AppShell>
@@ -40,14 +44,14 @@ function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] opacity-80">
-                <ShieldCheck className="h-3.5 w-3.5" /> Regulated by {country.centralBank}
+                <ShieldCheck className="h-3.5 w-3.5" /> Simulation profile · {country.centralBank}
               </div>
               <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px]">
                 <Wifi className="h-3 w-3 -rotate-90" /> Contactless
               </div>
             </div>
             <div className="mt-6">
-              <div className="text-xs uppercase tracking-widest opacity-70">Total Balance · {country.currency}</div>
+              <div className="text-xs uppercase tracking-widest opacity-70">Simulated Balance · {country.currency}</div>
               <div className="mt-1 font-serif text-4xl font-bold md:text-5xl">{formatMoney(total, country)}</div>
               <div className="mt-1 text-sm opacity-70">
                 ≈ ${(total * country.fxToUsd).toLocaleString(undefined, { maximumFractionDigits: 0 })} USD
@@ -96,6 +100,7 @@ function Dashboard() {
         </Card>
       </section>
 
+      <section className="mt-8 border-y border-border py-6"><SectionTitle>Pi banking infrastructure</SectionTitle><div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3"><Button asChild variant="outline"><Link to="/vaults">Asset vaults</Link></Button><Button asChild variant="outline"><Link to="/credit">Credit pools</Link></Button><Button asChild variant="outline"><Link to="/cards">Payment cards</Link></Button><Button asChild variant="outline"><Link to="/treasury">Treasury desk</Link></Button><Button asChild variant="outline"><Link to="/compliance">Trust & compliance</Link></Button><Button asChild variant="outline"><Link to="/ledger">Settlement ledger</Link></Button></div></section>
       {/* Accounts */}
       <section className="mt-10">
         <SectionTitle>Accounts</SectionTitle>
@@ -140,7 +145,7 @@ function Dashboard() {
         <Card className="p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
             <SectionTitle inline>Recent Activity</SectionTitle>
-            <Button variant="ghost" size="sm">View all</Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/ledger">View ledger</Link></Button>
           </div>
           <div className="mt-4 divide-y divide-border/60">
             {txns.map((t) => (
@@ -166,12 +171,12 @@ function Dashboard() {
           </div>
           <div className="mt-3 font-serif text-2xl font-bold">Bank + Pi, unified</div>
           <p className="mt-2 text-sm opacity-90">
-            Convert between {country.currency} and π, pay Pi-accepting merchants, and receive
-            remittances from Pioneers worldwide — settled instantly on the Pi Mainnet.
+            Simulate conversion between {country.currency} and π, pay Pi-accepting merchants, and receive
+            remittances from Pioneers worldwide — simulated in a balanced asset ledger.
           </p>
           <div className="mt-4 rounded-lg bg-white/10 p-3 backdrop-blur">
             <div className="flex items-center justify-between text-xs opacity-80">
-              <span>1 π</span><span>Live rate</span>
+              <span>1 π</span><span>Mock rate</span>
             </div>
             <div className="mt-1 flex items-baseline justify-between">
               <div className="font-serif text-xl font-bold">${PI_USD.toFixed(2)} USD</div>
