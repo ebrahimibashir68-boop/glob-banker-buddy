@@ -9,70 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VaultsRouteImport } from './routes/vaults'
-import { Route as TreasuryRouteImport } from './routes/treasury'
-import { Route as TransferRouteImport } from './routes/transfer'
-import { Route as PiRouteImport } from './routes/pi'
-import { Route as LedgerRouteImport } from './routes/ledger'
-import { Route as InternationalRouteImport } from './routes/international'
-import { Route as DepositRouteImport } from './routes/deposit'
-import { Route as CreditRouteImport } from './routes/credit'
-import { Route as ComplianceRouteImport } from './routes/compliance'
-import { Route as CardsRouteImport } from './routes/cards'
-import { Route as BillsRouteImport } from './routes/bills'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiPublicPiPayoutRouteImport } from './routes/api/public/pi/payout'
-import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
+import { Route as BillsRouteImport } from './routes/bills'
+import { Route as CardsRouteImport } from './routes/cards'
+import { Route as ComplianceRouteImport } from './routes/compliance'
+import { Route as CreditRouteImport } from './routes/credit'
+import { Route as DepositRouteImport } from './routes/deposit'
+import { Route as InternationalRouteImport } from './routes/international'
+import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as PiRouteImport } from './routes/pi'
+import { Route as TransferRouteImport } from './routes/transfer'
+import { Route as TreasuryRouteImport } from './routes/treasury'
+import { Route as VaultsRouteImport } from './routes/vaults'
 import { Route as ApiPublicPiApproveRouteImport } from './routes/api/public/pi/approve'
+import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
+import { Route as ApiPublicPiPayoutRouteImport } from './routes/api/public/pi/payout'
 
-const VaultsRoute = VaultsRouteImport.update({
-  id: '/vaults',
-  path: '/vaults',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TreasuryRoute = TreasuryRouteImport.update({
-  id: '/treasury',
-  path: '/treasury',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TransferRoute = TransferRouteImport.update({
-  id: '/transfer',
-  path: '/transfer',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PiRoute = PiRouteImport.update({
-  id: '/pi',
-  path: '/pi',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LedgerRoute = LedgerRouteImport.update({
-  id: '/ledger',
-  path: '/ledger',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InternationalRoute = InternationalRouteImport.update({
-  id: '/international',
-  path: '/international',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DepositRoute = DepositRouteImport.update({
-  id: '/deposit',
-  path: '/deposit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreditRoute = CreditRouteImport.update({
-  id: '/credit',
-  path: '/credit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ComplianceRoute = ComplianceRouteImport.update({
-  id: '/compliance',
-  path: '/compliance',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CardsRoute = CardsRouteImport.update({
-  id: '/cards',
-  path: '/cards',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BillsRoute = BillsRouteImport.update({
@@ -80,14 +35,59 @@ const BillsRoute = BillsRouteImport.update({
   path: '/bills',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CardsRoute = CardsRouteImport.update({
+  id: '/cards',
+  path: '/cards',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicPiPayoutRoute = ApiPublicPiPayoutRouteImport.update({
-  id: '/api/public/pi/payout',
-  path: '/api/public/pi/payout',
+const ComplianceRoute = ComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreditRoute = CreditRouteImport.update({
+  id: '/credit',
+  path: '/credit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DepositRoute = DepositRouteImport.update({
+  id: '/deposit',
+  path: '/deposit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InternationalRoute = InternationalRouteImport.update({
+  id: '/international',
+  path: '/international',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LedgerRoute = LedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PiRoute = PiRouteImport.update({
+  id: '/pi',
+  path: '/pi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransferRoute = TransferRouteImport.update({
+  id: '/transfer',
+  path: '/transfer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TreasuryRoute = TreasuryRouteImport.update({
+  id: '/treasury',
+  path: '/treasury',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VaultsRoute = VaultsRouteImport.update({
+  id: '/vaults',
+  path: '/vaults',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiApproveRoute = ApiPublicPiApproveRouteImport.update({
+  id: '/api/public/pi/approve',
+  path: '/api/public/pi/approve',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPiCompleteRoute = ApiPublicPiCompleteRouteImport.update({
@@ -95,9 +95,9 @@ const ApiPublicPiCompleteRoute = ApiPublicPiCompleteRouteImport.update({
   path: '/api/public/pi/complete',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicPiApproveRoute = ApiPublicPiApproveRouteImport.update({
-  id: '/api/public/pi/approve',
-  path: '/api/public/pi/approve',
+const ApiPublicPiPayoutRoute = ApiPublicPiPayoutRouteImport.update({
+  id: '/api/public/pi/payout',
+  path: '/api/public/pi/payout',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -227,74 +227,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vaults': {
-      id: '/vaults'
-      path: '/vaults'
-      fullPath: '/vaults'
-      preLoaderRoute: typeof VaultsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/treasury': {
-      id: '/treasury'
-      path: '/treasury'
-      fullPath: '/treasury'
-      preLoaderRoute: typeof TreasuryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/transfer': {
-      id: '/transfer'
-      path: '/transfer'
-      fullPath: '/transfer'
-      preLoaderRoute: typeof TransferRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pi': {
-      id: '/pi'
-      path: '/pi'
-      fullPath: '/pi'
-      preLoaderRoute: typeof PiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ledger': {
-      id: '/ledger'
-      path: '/ledger'
-      fullPath: '/ledger'
-      preLoaderRoute: typeof LedgerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/international': {
-      id: '/international'
-      path: '/international'
-      fullPath: '/international'
-      preLoaderRoute: typeof InternationalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/deposit': {
-      id: '/deposit'
-      path: '/deposit'
-      fullPath: '/deposit'
-      preLoaderRoute: typeof DepositRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/credit': {
-      id: '/credit'
-      path: '/credit'
-      fullPath: '/credit'
-      preLoaderRoute: typeof CreditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/compliance': {
-      id: '/compliance'
-      path: '/compliance'
-      fullPath: '/compliance'
-      preLoaderRoute: typeof ComplianceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cards': {
-      id: '/cards'
-      path: '/cards'
-      fullPath: '/cards'
-      preLoaderRoute: typeof CardsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bills': {
@@ -304,18 +241,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BillsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/cards': {
+      id: '/cards'
+      path: '/cards'
+      fullPath: '/cards'
+      preLoaderRoute: typeof CardsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/pi/payout': {
-      id: '/api/public/pi/payout'
-      path: '/api/public/pi/payout'
-      fullPath: '/api/public/pi/payout'
-      preLoaderRoute: typeof ApiPublicPiPayoutRouteImport
+    '/compliance': {
+      id: '/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof ComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/credit': {
+      id: '/credit'
+      path: '/credit'
+      fullPath: '/credit'
+      preLoaderRoute: typeof CreditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/deposit': {
+      id: '/deposit'
+      path: '/deposit'
+      fullPath: '/deposit'
+      preLoaderRoute: typeof DepositRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/international': {
+      id: '/international'
+      path: '/international'
+      fullPath: '/international'
+      preLoaderRoute: typeof InternationalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger': {
+      id: '/ledger'
+      path: '/ledger'
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pi': {
+      id: '/pi'
+      path: '/pi'
+      fullPath: '/pi'
+      preLoaderRoute: typeof PiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transfer': {
+      id: '/transfer'
+      path: '/transfer'
+      fullPath: '/transfer'
+      preLoaderRoute: typeof TransferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/treasury': {
+      id: '/treasury'
+      path: '/treasury'
+      fullPath: '/treasury'
+      preLoaderRoute: typeof TreasuryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vaults': {
+      id: '/vaults'
+      path: '/vaults'
+      fullPath: '/vaults'
+      preLoaderRoute: typeof VaultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/approve': {
+      id: '/api/public/pi/approve'
+      path: '/api/public/pi/approve'
+      fullPath: '/api/public/pi/approve'
+      preLoaderRoute: typeof ApiPublicPiApproveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/pi/complete': {
@@ -325,11 +325,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPiCompleteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/pi/approve': {
-      id: '/api/public/pi/approve'
-      path: '/api/public/pi/approve'
-      fullPath: '/api/public/pi/approve'
-      preLoaderRoute: typeof ApiPublicPiApproveRouteImport
+    '/api/public/pi/payout': {
+      id: '/api/public/pi/payout'
+      path: '/api/public/pi/payout'
+      fullPath: '/api/public/pi/payout'
+      preLoaderRoute: typeof ApiPublicPiPayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
