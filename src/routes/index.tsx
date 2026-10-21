@@ -15,6 +15,8 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Meridian Bank — Global banking, Pi-enabled" },
       { name: "description", content: "Pay bills, transfer, deposit, and send money internationally under each country's central bank rules — with built-in Pi Network wallet." },
       { property: "og:title", content: "Meridian Bank — Global banking, Pi-enabled" },

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { useSimulation } from "@/lib/simulation-context";
 import { useCountry } from "@/lib/country-context";
 import { COUNTRIES, formatMoney, getCountry } from "@/lib/banking";
 import { Card } from "@/components/ui/card";
@@ -16,6 +17,10 @@ import { PiPayButton } from "@/components/PiPayButton";
 export const Route = createFileRoute("/international")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "International Corridors · Meridian Banking Simulation" },
+      { property: "og:description", content: "Explore simulated international corridors alongside a separate Pi SDK checkout." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "International Transfers · Meridian Bank" },
       { name: "description", content: "Send money worldwide via SWIFT, SEPA, and correspondent banks — under both origin and destination central bank rules." },
     ],
@@ -25,7 +30,9 @@ export const Route = createFileRoute("/international")({
 
 function IntlPage() {
   const { country } = useCountry();
-  const [dest, setDest] = useState(COUNTRIES.find(c => c.code !== country.code)!.code);
+  const sim = useSimulation();
+  const settle = (amount: number, memo: string, category: string, source = "chk", deposit = false) => { try { sim.transact(amount, memo, category, source, deposit); toast.success("Simulation settlement recorded"); } catch (error) { toast.error(error instanceof Error ? error.message : "Settlement failed"); } };
+  const [dest, setDest] = useState(COUNTRIES.find(c => c.code !== country.code)?.code ?? "GB");
   const [amount, setAmount] = useState("1000");
   const destCountry = getCountry(dest);
 
@@ -52,7 +59,7 @@ function IntlPage() {
       <div>
         <h1 className="font-serif text-3xl font-bold text-navy md:text-4xl">International transfer</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          Cross-border payment subject to both {country.centralBank} (origin) and {destCountry.centralBank} (destination) rules.
+          Simulated cross-border corridor with profiles for {country.centralBank} (origin) and {destCountry.centralBank} (destination) rules.
         </p>
       </div>
 
@@ -115,7 +122,7 @@ function IntlPage() {
 
           <Button className="w-full bg-navy text-navy-foreground hover:bg-navy/90"
             disabled={blocked || overCap || !num}
-            onClick={() => toast.success("Wire submitted for compliance review", { description: `${rail} · ETA 1 business day` })}>
+            onClick={() => settle(total, `Demo corridor to ${destCountry.country}`, "International")}>
             Review & send <ArrowRight className="ml-1 h-4 w-4" />
           </Button>
 
@@ -123,13 +130,12 @@ function IntlPage() {
             className="w-full"
             amount={total}
             country={country}
-            disabled={blocked || !num}
+            disabled={blocked || overCap || num <= 0}
             memo={`Cross-border remittance to ${destCountry.country}`}
             metadata={{ type: "remittance", from: country.code, to: dest, localTotal: total }}
           />
           <p className="text-[11px] leading-relaxed text-muted-foreground">
-            Pi remittance settles peer-to-peer on Pi Mainnet, bypassing correspondent banks — central
-            bank caps on fiat corridors do not apply, purpose reporting still does.
+            Pi SDK checkout pays the app only; it does not settle a beneficiary remittance. Restrictions and applicable laws are not bypassed by Pi.
           </p>
           {overCap && !blocked && (
             <p className="text-xs text-destructive">
